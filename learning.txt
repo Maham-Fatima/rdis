@@ -1,0 +1,8 @@
+No gpt allowed
+Use medium, articles
+tech use redis, rabbitmq, openCV, python FastAPI, NextJs
+Three algorithms available currently in openCv
+Eigenfaces (see EigenFaceRecognizer::create)
+Fisherfaces (see FisherFaceRecognizer::create)
+Local Binary Patterns Histograms (see LBPHFaceRecognizer::create)
+best for real world is LBPH slower but more accurate

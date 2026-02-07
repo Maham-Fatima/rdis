@@ -6,3 +6,5 @@ Eigenfaces (see EigenFaceRecognizer::create)
 Fisherfaces (see FisherFaceRecognizer::create)
 Local Binary Patterns Histograms (see LBPHFaceRecognizer::create)
 best for real world is LBPH slower but more accurate
+
+collect -> train -> increment -> predict 

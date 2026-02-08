@@ -7,4 +7,30 @@ Fisherfaces (see FisherFaceRecognizer::create)
 Local Binary Patterns Histograms (see LBPHFaceRecognizer::create)
 best for real world is LBPH slower but more accurate
 
-collect -> train -> increment -> predict 
+collect -> train -> incremental train -> predict 
+architecture for attendance using redis and rabbitmq
+redis for rate limiting, frequent entry/exit, training data storage for train frequently
+                ┌─────────────┐
+Camera(s) ───▶  │ Producer(s) │
+(Webcam API)    │ (Frames)    │
+                └─────┬───────┘
+                      │
+                      ▼
+                ┌─────────────┐
+                │ Message Q   │   (RabbitMQ / Redis Streams)
+                └─────┬───────┘
+                      │
+          ┌───────────┴───────────┐
+          │                       │
+          ▼                       ▼
+  Training Consumer        Recognition Consumer
+  (batch mode)            (real-time)
+          │                       │
+          ▼                       ▼
+ Redis (image batches)    Redis (attendance buffer)
+          │                       │
+          ▼                       ▼
+  Trainer Service        Attendance Service
+          │                       │
+          ▼                       ▼
+   Model Storage          SQL / NoSQL DB

@@ -21,7 +21,7 @@ while True:
         roi_gray = gray[y:y+h, x:x+w]
         ID, confidence = recognizer.predict(roi_gray)
     
-        cv2.putText(img, ID, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+        cv2.putText(img, str(ID), (450, 450), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
     cv2.imshow('Face Recognition', img)
 

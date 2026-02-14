@@ -72,6 +72,7 @@ class CameraProducer:
                     content_type='application/pickle'
                 )
             )
+            logger.info("sending to queue successfully")
         except Exception as e:
             logger.error(f"Failed to publish message to {queue}: {e}")
             # Reconnect and retry
@@ -93,17 +94,13 @@ class CameraProducer:
             camera_stream: Camera URL or device ID
             user_id: If provided, send to training queue; otherwise to attendance queue
         """
-        logger.info(f"Starting camera worker for {camera_type}")
+        logger.info(f"Starting camera worker for {camera_type} {camera_stream}")
         capture = None
         frame_count = 0
         detection_count = 0
-        
+        if user_id:
+            logger.info(f"training for {user_id}")
         try:
-            # Try to convert to int for device ID, otherwise use as URL
-            try:
-                camera_stream = int(camera_stream)
-            except ValueError:
-                pass
             
             capture = cv2.VideoCapture(camera_stream)
             
@@ -165,9 +162,10 @@ class CameraProducer:
                     # Draw rectangle on frame for visualization (optional)
                     cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
                 
+                if frame_count == 1000:
+                    break
                 # Optional: Display the frame (comment out in production)
                 # cv2.imshow(f'Camera {camera_type}', img)
-                
                 # Check for 'q' key to quit (only works if imshow is enabled)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     self.running = False
@@ -190,8 +188,11 @@ class CameraProducer:
         """Start all configured cameras in separate threads"""
         self.running = True
         threads = []
-        
-        for camera_type, camera_stream in config.CAMERAS.items():
+        if user_id is not None:
+            cameras_list = [("entrance", config.CAMERAS["entrance"])] 
+        else:
+            cameras_list = config.CAMERAS.items()
+        for camera_type, camera_stream in cameras_list:
             thread = threading.Thread(
                 target=self.camera_worker,
                 args=(camera_type, camera_stream, user_id),
@@ -234,7 +235,7 @@ def main():
     if args.user_id:
         logger.info(f"Starting in TRAINING mode for user {args.user_id}")
     else:
-        logger.info("Starting in ATTENDANCE mode")
+        logger.info("Starting in ATTENDANCE mode")   
     
     producer.start_all_cameras(user_id=args.user_id)
 

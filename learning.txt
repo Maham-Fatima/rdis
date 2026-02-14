@@ -34,3 +34,8 @@ Camera(s) ───▶  │ Producer(s) │
           │                       │
           ▼                       ▼
    Model Storage          SQL / NoSQL DB
+
+add user
+run Producer
+run worker
+run collect data

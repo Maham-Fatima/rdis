@@ -2,15 +2,14 @@
 Configuration management for the Face Recognition Attendance System
 """
 import os
-from dataclasses import dataclass
 from typing import Dict
 
-@dataclass
+
 class Config:
     # Database Configuration
     DATABASE_URL: str = os.getenv(
         'DATABASE_URL', 
-        'postgresql://user:password@localhost:5432/attendance_db'
+        'mysql+pymysql://root:admin@localhost:3306/attendance_db'
         # For SQLite use: 'sqlite:///attendance.db'
     )
     
@@ -33,7 +32,7 @@ class Config:
     # Camera Configuration
     CAMERAS: Dict[str, str] = {
         "entrance": os.getenv('CAMERA_ENTRANCE', "http://192.168.100.52:8080/video"),
-        "exit": os.getenv('CAMERA_EXIT', "http://192.168.100.53:8080/video")
+        "exit": os.getenv('CAMERA_EXIT', "http://192.168.100.52:8080/video")
     }
     
     # Face Detection Configuration

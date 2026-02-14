@@ -197,7 +197,7 @@ class ModelTrainer:
                 # Find the most recent pending/processing session for this user
                 training_session = session.query(TrainingSession).filter_by(
                     user_id=user_id,
-                    status__in=['pending', 'processing']
+                    status =['pending', 'processing']
                 ).order_by(TrainingSession.started_at.desc()).first()
                 
                 if training_session:
